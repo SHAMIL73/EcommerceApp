@@ -1,8 +1,6 @@
-// ignore_for_file: camel_case_types
-
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/ProductDetails.dart';
-import 'package:flutter_application_2/ProviderDemo.dart';
+import 'package:flutter_application_2/View/ProductDetails.dart';
+import 'package:flutter_application_2/View%20Model/ProviderDemo.dart';
 import 'package:provider/provider.dart';
 
 class Eapp extends StatefulWidget {
@@ -37,8 +35,16 @@ class _liStState extends State<liSt> {
 
   @override
   Widget build(BuildContext context) {
+    Color getTextColor(BuildContext context) {
+      final isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
+      final backgroundColor = isDarkMode ? Colors.black : Colors.white;
+
+      // Calculate luminance and choose text color accordingly
+      final luminance = backgroundColor.computeLuminance();
+      return luminance > 0.5 ? Colors.black : Colors.white;
+    }
+
     return Scaffold(
-      
       backgroundColor: Provider.of<ProviderClass>(context).isDarkMode
           ? Colors.black
           : Colors.white,
@@ -46,8 +52,9 @@ class _liStState extends State<liSt> {
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
         title: Text(
           'Eapp',
-          style: TextStyle(fontWeight: FontWeight.w500,
-            color: _getTextColor(context),
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: getTextColor(context),
           ),
         ),
         actions: [
@@ -61,7 +68,7 @@ class _liStState extends State<liSt> {
                         ? Icons.light_mode
                         : Icons.dark_mode,
                     size: 30,
-                    color: _getTextColor(context),
+                    color: getTextColor(context),
                   ),
                   onPressed: () {
                     themeProvider.toggleTheme();
@@ -74,7 +81,7 @@ class _liStState extends State<liSt> {
       ),
       body: Consumer<ProviderClass>(
         builder: (context, api, child) {
-          return api.products.isNotEmpty
+          return api.myproducts.isNotEmpty
               ? GridView.builder(
                   physics: const BouncingScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -82,7 +89,7 @@ class _liStState extends State<liSt> {
                     crossAxisSpacing: 8,
                     mainAxisExtent: 250,
                   ),
-                  itemCount: api.products.length,
+                  itemCount: api.myproducts.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
@@ -90,10 +97,9 @@ class _liStState extends State<liSt> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                ProductsDetails(product: api.products[index]),
+                                ProductsDetails(product: api.myproducts[index]),
                           ),
                         );
-                        print('workking');
                       },
                       child: GridTile(
                         child: Column(
@@ -104,7 +110,7 @@ class _liStState extends State<liSt> {
                                   width: double.infinity,
                                   height: 160,
                                   child: Image.network(
-                                    '${api.products[index]['thumbnail']}',
+                                    '${api.myproducts[index]['thumbnail']}',
                                   ),
                                 ),
                               ],
@@ -112,9 +118,9 @@ class _liStState extends State<liSt> {
                             Column(
                               children: [
                                 Text(
-                                  '${api.products[index]['title']}',
+                                  '${api.myproducts[index]['title']}',
                                   style: TextStyle(
-                                    color: _getTextColor(context),
+                                    color: getTextColor(context),
                                   ),
                                 ),
                               ],
@@ -125,9 +131,9 @@ class _liStState extends State<liSt> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 55),
                                   child: Text(
-                                    "\$${api.products[index]['price']}",
+                                    "\$${api.myproducts[index]['price']}",
                                     style: TextStyle(
-                                      color: _getTextColor(context),
+                                      color: getTextColor(context),
                                     ),
                                   ),
                                 ),
@@ -144,12 +150,12 @@ class _liStState extends State<liSt> {
                                   children: [
                                     Icon(
                                       Icons.star,
-                                      color: _getTextColor(context),
+                                      color: getTextColor(context),
                                     ),
                                     Text(
-                                      '${api.products[index]['rating']}',
+                                      '${api.myproducts[index]['rating']}',
                                       style: TextStyle(
-                                        color: _getTextColor(context),
+                                        color: getTextColor(context),
                                       ),
                                     ),
                                   ],
@@ -164,18 +170,7 @@ class _liStState extends State<liSt> {
                 )
               : const Center(child: Text('Loading...'));
         },
-        
       ),
-      
     );
-  }
-
-  Color _getTextColor(BuildContext context) {
-    final isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
-    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
-
-    // Calculate luminance and choose text color accordingly
-    final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? Colors.black : Colors.white;
   }
 }

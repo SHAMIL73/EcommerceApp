@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_application_2/Cart.dart';
-import 'package:flutter_application_2/ProviderDemo.dart';
+import 'package:flutter_application_2/View/Cart.dart';
+import 'package:flutter_application_2/View%20Model/ProviderDemo.dart';
 import 'package:provider/provider.dart';
 
 class ProductsDetails extends StatefulWidget {
   final Map<String, dynamic> product;
-
   const ProductsDetails({super.key, required this.product});
-
   @override
   State<ProductsDetails> createState() => _ProductsDetailsState();
 }
@@ -82,41 +80,44 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             product['title'],
             style: TextStyle(color: _getTextColor(context), fontSize: 20),
           ),
-          SizedBox(height: 25),
+          const SizedBox(height: 25),
           Padding(
             padding: const EdgeInsets.only(left: 15),
             child: RichText(
               text: TextSpan(
                 text: 'about : ',
-                style: TextStyle(
-                  color: Colors.blue,  // Set the color for the 'about' text
+                style: const TextStyle(
+                  color: Colors.blue,
                   fontSize: 20,
                 ),
                 children: [
                   TextSpan(
-                    text: '${product['description']}',
+                    text: product['description'],
                     style: TextStyle(
             color: _getTextColor(context),
-            fontSize: 20,
+            fontSize: 15,
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          SizedBox(height: 70),
+          const SizedBox(height: 70),
           Row(mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 15),
-                child: Row(
-                  children: [
-                    Text("FREE DELIVERY",style: TextStyle(
-                          color: _getTextColor(context),
-                          fontWeight: FontWeight.bold,
-                        ),),
-                        Icon(Icons.card_travel),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 3),
+                  child: Row(
+                    children: [
+                      Text("FREE DELIVERY",style: TextStyle(
+                            color: _getTextColor(context),
+                            fontWeight: FontWeight.bold,
+                          ),),
+                          const Icon(Icons.card_travel),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -136,7 +137,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => Cart(

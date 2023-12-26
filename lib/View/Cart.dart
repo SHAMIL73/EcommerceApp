@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Cart extends StatefulWidget {
-  const Cart({Key? key, required this.images, required this.title, required this.price})
+  const Cart(
+      {Key? key, required this.images, required this.title, required this.price})
       : super(key: key);
 
   final String images;
@@ -33,7 +34,8 @@ class _CartState extends State<Cart> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(margin: EdgeInsets.only(left: 5),
+                  Container(
+                    margin: const EdgeInsets.only(left: 5),
                     child: Image.network(
                       widget.images,
                       width: 100,
@@ -42,21 +44,26 @@ class _CartState extends State<Cart> {
                     ),
                   ),
                   Container(
-                    child: Text(
+                    child: SizedBox(
+                      width: 132,
+                      child: Text(
                         widget.title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
+                          fontSize: 20,
                         ),
                       ),
-                  ),Container(margin: EdgeInsets.only(right: 5),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(right: 5),
                     child: Text(
-                        "\$${widget.price.toString()}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
-                        ),
+                      "\$${widget.price.toString()}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
                       ),
+                    ),
                   ),
                 ],
               ),

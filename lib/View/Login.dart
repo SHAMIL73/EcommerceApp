@@ -1,74 +1,32 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Eapp.dart';
-import 'package:flutter_application_2/Login.dart';
+import 'package:flutter_application_2/View/Eapp.dart';
+import 'package:flutter_application_2/View/Signup.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_application_2/ProviderDemo.dart';
+import 'package:flutter_application_2/View%20Model/ProviderDemo.dart';
 import 'package:provider/provider.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({super.key});
+class Login extends StatefulWidget {
+  const Login({super.key});
   @override
-  State<Signup> createState() => _SignupState();
+  State<Login> createState() => _LoginState();
 }
 
-class _SignupState extends State<Signup> {
-  //Textfield Controller
-
+class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final auth = FirebaseAuth.instance;
 
-  //Google Authentication
-
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  User? _user;
-
-  User? get user => _user;
-
-  Future<User?> signInWithGoogle() async {
-    GoogleSignInAccount? googleSignInAccount;
-    try {
-      googleSignInAccount =
-          await googleSignIn.signIn().catchError((onError) => null);
-      if (googleSignInAccount == null) {
-        return null;
-      }
-    } catch (e) {
-      // ignore: avoid_print
-      print(e);
-    }
-
-    if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleAuth =
-          await googleSignInAccount.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      try {
-        final UserCredential authResult =
-            await auth.signInWithCredential(credential);
-        final User? user = authResult.user;
-
-        return user;
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'account-exists-with-different-credential') {
-          // ...
-        } else if (e.code == 'invalid-credential') {
-          // ...
-        }
-      } catch (e) {
-        // ignore: avoid_print
-        print(e);
-      }
-    }
-
-    return null;
+  Future<UserCredential?> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
-
-  //Light and Dark mode (From provider)
 
   Color _getTextColor(BuildContext context) {
     bool isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
@@ -86,9 +44,6 @@ class _SignupState extends State<Signup> {
       backgroundColor: Provider.of<ProviderClass>(context).isDarkMode
           ? Colors.black
           : Colors.white,
-
-      //App Bar
-
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
         title: Text(
@@ -120,9 +75,6 @@ class _SignupState extends State<Signup> {
           ),
         ],
       ),
-
-      //Body
-
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -132,18 +84,13 @@ class _SignupState extends State<Signup> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Sign up',
+                  'Login',
                   style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.w500,
-                    color: _getTextColor(context),
-                  ),
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.w500,
+                      color: _getTextColor(context)),
                 ),
-
                 const SizedBox(height: 20.0),
-
-                //Email Textfield
-
                 TextField(
                   controller: emailController,
                   style: TextStyle(color: _getTextColor(context)),
@@ -152,11 +99,7 @@ class _SignupState extends State<Signup> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-
                 const SizedBox(height: 10.0),
-
-                //Password Textfield
-
                 TextField(
                   controller: passwordController,
                   style: TextStyle(color: _getTextColor(context)),
@@ -166,84 +109,55 @@ class _SignupState extends State<Signup> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-
                 const SizedBox(height: 20.0),
-
-                //START OF ROW
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(left: 64),
-
-                      //Sign up Button
-
+                      margin: const EdgeInsets.only(left: 71),
                       child: ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            final credential = await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
-                              email: emailController.text,
-                              password: passwordController.text,
+                         onPressed: () async {
+                          final userCredential =
+                              await auth.signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Eapp(),
+                              ),
                             );
-                            if (credential == true) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Eapp()),
-                              );
-                            }
-                          } on FirebaseAuthException catch (e) {
-                            if (e.code == 'weak-password') {
-                              print('The password provided is too weak.');
-                            } else if (e.code == 'email-already-in-use') {
-                              print(
-                                  'The account already exists for that email.');
-                            } else {
-                              print(e);
-                            }
-                          } catch (e) {
-                            print(e);
-                          }
                         },
                         style: ButtonStyle(
-                          fixedSize:
-                              MaterialStateProperty.all(const Size(170, 44)),
                           backgroundColor: MaterialStateProperty.all<Color>(
                               _getTextColor(context)),
+                          fixedSize:
+                              MaterialStateProperty.all(const Size(170, 44)),
                         ),
-                        child: Text('SIGN UP',
+                        child: Text('LOGIN',
                             style: TextStyle(
+                              color: _getTextColor2(context),
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
-                              color: _getTextColor2(context),
                             )),
                       ),
                     ),
-
-                    //Blue Color Login Button On Right Side of the Textfield
-
                     TextButton(
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Login(),
+                            builder: (context) => const Signup(),
                           ),
                         );
                       },
-                      child: const Text(
-                        "log in",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue),
-                      ),
+                      child: const Text("sign up",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.blue)),
                     ),
                   ],
                 ),
-
-                //END OF ROW
-
                 Padding(
                   padding: const EdgeInsets.only(top: 20),
                   child: Text(
@@ -254,12 +168,11 @@ class _SignupState extends State<Signup> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    //Google Button
-
                     GestureDetector(
                       onTap: () async {
-                        User? user = await signInWithGoogle();
-                        if (user != null) {
+                        final UserCredential? userCredential =
+                            await signInWithGoogle();
+                        if (userCredential != null) {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Login.dart';
-import 'package:flutter_application_2/ProviderDemo.dart';
+import 'package:flutter_application_2/View/Login.dart';
+import 'package:flutter_application_2/View%20Model/ProviderDemo.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
