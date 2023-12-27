@@ -1,90 +1,41 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/View%20Model/DarkModeProvider.dart';
 import 'package:flutter_application_2/View/Eapp.dart';
 import 'package:flutter_application_2/View/Login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_application_2/View%20Model/ProviderDemo.dart';
+import 'package:flutter_application_2/View%20Model/GoogleAuthenticationProvider.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
+
   @override
   State<Signup> createState() => _SignupState();
 }
 
 class _SignupState extends State<Signup> {
-
   // Textfield Controller
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final auth = FirebaseAuth.instance;
 
   // Google Authentication
-
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  User? _user;
-
-  User? get user => _user;
-
-  Future<User?> signInWithGoogle() async {
-    GoogleSignInAccount? googleSignInAccount;
-    try {
-      googleSignInAccount =
-          await googleSignIn.signIn().catchError((onError) => null);
-      if (googleSignInAccount == null) {
-        return null;
-      }
-    } catch (e) {
-      // ignore: avoid_print
-      print(e);
-    }
-
-    if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleAuth =
-          await googleSignInAccount.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      try {
-        final UserCredential authResult =
-            await auth.signInWithCredential(credential);
-        final User? user = authResult.user;
-
-        return user;
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'account-exists-with-different-credential') {
-          // ...
-        } else if (e.code == 'invalid-credential') {
-          // ...
-        }
-      } catch (e) {
-        // ignore: avoid_print
-        print(e);
-      }
-    }
-
-    return null;
-  }
 
   // Light and Dark mode (From provider)
 
   Color _getTextColor(BuildContext context) {
-    bool isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
+    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
     return isDarkMode ? Colors.white : Colors.black;
   }
 
   Color _getTextColor2(BuildContext context) {
-    bool isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
+    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
     return isDarkMode ? Colors.black : Colors.white;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Provider.of<ProviderClass>(context).isDarkMode
+      backgroundColor: Provider.of<DarkModeProvider>(context).isDarkMode
           ? Colors.black
           : Colors.white,
 
@@ -102,7 +53,7 @@ class _SignupState extends State<Signup> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 6),
-            child: Consumer<ProviderClass>(
+            child: Consumer<DarkModeProvider>(
               builder: (context, themeProvider, child) {
                 return IconButton(
                   icon: Icon(
@@ -183,13 +134,15 @@ class _SignupState extends State<Signup> {
                       child: ElevatedButton(
                         onPressed: () async {
                           try {
-                            final credential = await FirebaseAuth.instance
-                                .createUserWithEmailAndPassword(
+                            final credential =
+                                await FirebaseAuth.instance
+                                    .createUserWithEmailAndPassword(
                               email: emailController.text,
                               password: passwordController.text,
                             );
-                            if (credential == true) {
-                              Navigator.push(
+
+                            if (credential != null) {
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const Eapp()),
@@ -259,7 +212,12 @@ class _SignupState extends State<Signup> {
 
                     GestureDetector(
                       onTap: () async {
-                        User? user = await signInWithGoogle();
+                        GoogleAuthenticationProvider provider =
+                            Provider.of<GoogleAuthenticationProvider>(
+                                context,
+                                listen: false);
+                        User? user = await provider.signInWithGoogle();
+
                         if (user != null) {
                           Navigator.pushReplacement(
                             context,

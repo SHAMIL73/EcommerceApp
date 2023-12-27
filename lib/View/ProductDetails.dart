@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_application_2/View%20Model/DarkModeProvider.dart';
 import 'package:flutter_application_2/View/Cart.dart';
-import 'package:flutter_application_2/View%20Model/ProviderDemo.dart';
 import 'package:provider/provider.dart';
 
 class ProductsDetails extends StatefulWidget {
@@ -13,12 +13,12 @@ class ProductsDetails extends StatefulWidget {
 
 class _ProductsDetailsState extends State<ProductsDetails> {
   Color _getTextColor(BuildContext context) {
-    bool isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
+    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
     return isDarkMode ? Colors.white : Colors.black;
   }
 
   Color _getTextColor2(BuildContext context) {
-    bool isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
+    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
     return isDarkMode ? Colors.black : Colors.white;
   }
 
@@ -26,7 +26,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
   Widget build(BuildContext context) {
     final product = widget.product;
     return Scaffold(
-      backgroundColor: Provider.of<ProviderClass>(context).isDarkMode
+      backgroundColor: Provider.of<DarkModeProvider>(context).isDarkMode
           ? Colors.black
           : Colors.white,
       appBar: AppBar(
@@ -41,7 +41,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 6),
-            child: Consumer<ProviderClass>(
+            child: Consumer<DarkModeProvider>(
               builder: (context, themeProvider, child) {
                 return IconButton(
                   icon: Icon(

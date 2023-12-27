@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/View%20Model/DarkModeProvider.dart';
 import 'package:flutter_application_2/View/Eapp.dart';
 import 'package:flutter_application_2/View/Signup.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_application_2/View%20Model/ProviderDemo.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -29,19 +29,19 @@ class _LoginState extends State<Login> {
   }
 
   Color _getTextColor(BuildContext context) {
-    bool isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
+    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
     return isDarkMode ? Colors.white : Colors.black;
   }
 
   Color _getTextColor2(BuildContext context) {
-    bool isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
+    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
     return isDarkMode ? Colors.black : Colors.white;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Provider.of<ProviderClass>(context).isDarkMode
+      backgroundColor: Provider.of<DarkModeProvider>(context).isDarkMode
           ? Colors.black
           : Colors.white,
       appBar: AppBar(
@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 6),
-            child: Consumer<ProviderClass>(
+            child: Consumer<DarkModeProvider>(
               builder: (context, themeProvider, child) {
                 return IconButton(
                   icon: Icon(

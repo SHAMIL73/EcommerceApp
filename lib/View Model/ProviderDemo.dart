@@ -16,12 +16,4 @@ class ProviderClass extends ChangeNotifier {
       throw Exception('Failed to load products');
     }
   }
-
-  bool _isDarkMode = false;
-  bool get isDarkMode => _isDarkMode;
-
-  void toggleTheme() {
-    _isDarkMode = !_isDarkMode;
-    notifyListeners();
-  }
 }

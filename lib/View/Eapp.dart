@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/View%20Model/DarkModeProvider.dart';
 import 'package:flutter_application_2/View/ProductDetails.dart';
 import 'package:flutter_application_2/View%20Model/ProviderDemo.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,7 @@ class _liStState extends State<liSt> {
   @override
   Widget build(BuildContext context) {
     Color getTextColor(BuildContext context) {
-      final isDarkMode = Provider.of<ProviderClass>(context).isDarkMode;
+      final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
       final backgroundColor = isDarkMode ? Colors.black : Colors.white;
 
       // Calculate luminance and choose text color accordingly
@@ -45,7 +46,7 @@ class _liStState extends State<liSt> {
     }
 
     return Scaffold(
-      backgroundColor: Provider.of<ProviderClass>(context).isDarkMode
+      backgroundColor: Provider.of<DarkModeProvider>(context).isDarkMode
           ? Colors.black
           : Colors.white,
       appBar: AppBar(
@@ -60,7 +61,7 @@ class _liStState extends State<liSt> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 6),
-            child: Consumer<ProviderClass>(
+            child: Consumer<DarkModeProvider>(
               builder: (context, themeProvider, child) {
                 return IconButton(
                   icon: Icon(
