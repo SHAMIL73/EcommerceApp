@@ -87,3 +87,15 @@ class Product {
         "images": List<dynamic>.from(images.map((x) => x)),
       };
 }
+
+class ProductDetails {
+  final String images;
+  final String title;
+  final int price;
+
+  ProductDetails({
+    required this.images,
+    required this.title,
+    required this.price,
+  });
+}

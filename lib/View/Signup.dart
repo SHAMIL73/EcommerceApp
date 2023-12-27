@@ -20,24 +20,9 @@ class _SignupState extends State<Signup> {
 
   // Google Authentication
 
-  // Light and Dark mode (From provider)
-
-  Color _getTextColor(BuildContext context) {
-    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
-    return isDarkMode ? Colors.white : Colors.black;
-  }
-
-  Color _getTextColor2(BuildContext context) {
-    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
-    return isDarkMode ? Colors.black : Colors.white;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Provider.of<DarkModeProvider>(context).isDarkMode
-          ? Colors.black
-          : Colors.white,
 
       // App Bar
 
@@ -47,30 +32,8 @@ class _SignupState extends State<Signup> {
           'Eapp',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: _getTextColor(context),
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 6),
-            child: Consumer<DarkModeProvider>(
-              builder: (context, themeProvider, child) {
-                return IconButton(
-                  icon: Icon(
-                    themeProvider.isDarkMode
-                        ? Icons.light_mode
-                        : Icons.dark_mode,
-                    size: 30,
-                    color: _getTextColor(context),
-                  ),
-                  onPressed: () {
-                    themeProvider.toggleTheme();
-                  },
-                );
-              },
-            ),
-          ),
-        ],
       ),
 
       // Body
@@ -88,7 +51,6 @@ class _SignupState extends State<Signup> {
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.w500,
-                    color: _getTextColor(context),
                   ),
                 ),
 
@@ -98,7 +60,6 @@ class _SignupState extends State<Signup> {
 
                 TextField(
                   controller: emailController,
-                  style: TextStyle(color: _getTextColor(context)),
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
@@ -111,7 +72,6 @@ class _SignupState extends State<Signup> {
 
                 TextField(
                   controller: passwordController,
-                  style: TextStyle(color: _getTextColor(context)),
                   obscureText: true,
                   decoration: const InputDecoration(
                     labelText: 'Password',
@@ -164,14 +124,13 @@ class _SignupState extends State<Signup> {
                         style: ButtonStyle(
                           fixedSize:
                               MaterialStateProperty.all(const Size(170, 44)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              _getTextColor(context)),
+                          backgroundColor: MaterialStateProperty.all(Colors.black)
                         ),
                         child: Text('SIGN UP',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
-                              color: _getTextColor2(context),
+                              color: Colors.white,
                             )),
                       ),
                     ),
@@ -202,7 +161,7 @@ class _SignupState extends State<Signup> {
                   padding: const EdgeInsets.only(top: 20),
                   child: Text(
                       "-------------------------or sign in with-------------------------",
-                      style: TextStyle(color: _getTextColor(context))),
+                     ),
                 ),
                 const SizedBox(height: 3),
                 Row(

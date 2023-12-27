@@ -187,5 +187,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
         ),
       ),
     );
+    
   }
+  
 }
