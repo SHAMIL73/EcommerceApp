@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Cart extends StatefulWidget {
@@ -14,64 +15,31 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
+  final CollectionReference cart = FirebaseFirestore.instance.collection('cart');
   @override
+  
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index) => Column(
-          children: [
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2.5,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 5),
-                    child: Image.network(
-                      widget.images,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  Container(
-                    child: SizedBox(
-                      width: 132,
-                      child: Text(
-                        widget.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(right: 5),
-                    child: Text(
-                      "\$${widget.price.toString()}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
-      ),
+      body: StreamBuilder(stream:cart.snapshots(), 
+                         builder: (context, AsyncSnapshot snapshot) {
+if (snapshot.hasData){
+  return ListView.builder(
+        itemCount: snapshot.data!.docs.length,
+        itemBuilder: (context, index) {
+          final DocumentSnapshot cartSnap = snapshot.data.docs[index];
+          return Column(
+            children: [
+              Text(cartSnap['title']),
+            ],
+          );
+        }
+      );
+}return Container(color: Colors.black,
+height: 100,
+width: 200,);                         },
+      
+      )
     );
   }
 }

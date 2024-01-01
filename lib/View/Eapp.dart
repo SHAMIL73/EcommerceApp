@@ -39,8 +39,6 @@ class _liStState extends State<liSt> {
     Color getTextColor(BuildContext context) {
       final isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
       final backgroundColor = isDarkMode ? Colors.black : Colors.white;
-
-      // Calculate luminance and choose text color accordingly
       final luminance = backgroundColor.computeLuminance();
       return luminance > 0.5 ? Colors.black : Colors.white;
     }

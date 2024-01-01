@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/View%20Model/DarkModeProvider.dart';
 import 'package:flutter_application_2/View/Eapp.dart';
 import 'package:flutter_application_2/View/Login.dart';
 import 'package:flutter_application_2/View%20Model/GoogleAuthenticationProvider.dart';
@@ -28,7 +27,7 @@ class _SignupState extends State<Signup> {
 
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
-        title: Text(
+        title: const Text(
           'Eapp',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -46,7 +45,7 @@ class _SignupState extends State<Signup> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Sign up',
                   style: TextStyle(
                     fontSize: 24.0,
@@ -101,14 +100,12 @@ class _SignupState extends State<Signup> {
                               password: passwordController.text,
                             );
 
-                            if (credential != null) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Eapp()),
-                              );
-                            }
-                          } on FirebaseAuthException catch (e) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Eapp()),
+                            );
+                                                    } on FirebaseAuthException catch (e) {
                             if (e.code == 'weak-password') {
                               print('The password provided is too weak.');
                             } else if (e.code == 'email-already-in-use') {
@@ -126,7 +123,7 @@ class _SignupState extends State<Signup> {
                               MaterialStateProperty.all(const Size(170, 44)),
                           backgroundColor: MaterialStateProperty.all(Colors.black)
                         ),
-                        child: Text('SIGN UP',
+                        child: const Text('SIGN UP',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
@@ -157,8 +154,8 @@ class _SignupState extends State<Signup> {
 
                 // END OF ROW
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                const Padding(
+                  padding: EdgeInsets.only(top: 20),
                   child: Text(
                       "-------------------------or sign in with-------------------------",
                      ),

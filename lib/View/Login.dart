@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/View%20Model/DarkModeProvider.dart';
 import 'package:flutter_application_2/View/Eapp.dart';
 import 'package:flutter_application_2/View/Signup.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -33,7 +31,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
-        title: Text(
+        title: const Text(
           'Eapp',
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -69,7 +67,7 @@ class _LoginState extends State<Login> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Login',
                   style: TextStyle(
                     fontSize: 24.0,
@@ -118,7 +116,7 @@ class _LoginState extends State<Login> {
                               MaterialStateProperty.all(const Size(170, 44)),
                           backgroundColor: MaterialStateProperty.all(Colors.black)
                         ),
-                        child: Text(
+                        child: const Text(
                           'LOGIN',
                           style: TextStyle(
                             color: Colors.white,
@@ -143,8 +141,8 @@ class _LoginState extends State<Login> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                const Padding(
+                  padding: EdgeInsets.only(top: 20),
                   child: Text(
                     "-------------------------or sign in with-------------------------",
                   ),
