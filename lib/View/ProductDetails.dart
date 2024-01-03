@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_application_2/View%20Model/DarkModeProvider.dart';
+import 'package:flutter_application_2/Model/ApiController.dart';
+import 'package:flutter_application_2/Controller/DarkModeProvider.dart';
 import 'package:flutter_application_2/View/Cart.dart';
 import 'package:provider/provider.dart';
 
 class ProductsDetails extends StatefulWidget {
-  final Map<String, dynamic> product;
+  final Product product;
+
   const ProductsDetails({super.key, required this.product});
+
   @override
   State<ProductsDetails> createState() => _ProductsDetailsState();
 }
@@ -22,6 +26,40 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     return isDarkMode ? Colors.black : Colors.white;
   }
 
+  final CollectionReference Add_cart = FirebaseFirestore.instance.collection('cart');
+  late final Product product;
+  late final CollectionReference cart;
+Future<void> addToFirestore() async {
+    final data = {
+      'thumbnail': widget.product.thumbnail,
+      'images': widget.product.images,
+      'price': widget.product.price,
+      'discription': widget.product.description,
+      'discountPercentage': widget.product.discountPercentage,
+      'rating': widget.product.rating,
+      'title': widget.product.title,
+      'stock': widget.product.stock,
+    };
+
+    final QuerySnapshot<Object?> existingProducts =
+    await Add_cart.where('title', isEqualTo: widget.product.title).get();
+
+if (existingProducts.docs.isEmpty) {
+  Add_cart.add(data);
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Added to Cart'),
+    ),
+  );
+} else {
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Product already in Cart'),
+    ),
+  );
+}
+
+  }
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
@@ -33,7 +71,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
         iconTheme: IconThemeData(color: _getTextColor(context)),
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
         title: Text(
-          product['brand'],
+          product.brand,
           style: TextStyle(
             color: _getTextColor(context),
           ),
@@ -69,7 +107,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               enableInfiniteScroll: true,
               viewportFraction: 1.0,
             ),
-            items: product["images"].map<Widget>((imageUrl) {
+            items: product.images.map<Widget>((imageUrl) {
               return SizedBox(
                 width: 300,
                 child: Image.network(imageUrl, fit: BoxFit.cover),
@@ -77,7 +115,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             }).toList(),
           ),
           Text(
-            product['title'],
+            product.title,
             style: TextStyle(color: _getTextColor(context), fontSize: 20),
           ),
           const SizedBox(height: 25),
@@ -92,7 +130,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                 ),
                 children: [
                   TextSpan(
-                    text: product['description'],
+                    text: product.description,
                     style: TextStyle(
             color: _getTextColor(context),
             fontSize: 15,
@@ -137,14 +175,11 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             GestureDetector(
               onTap: () {
+                addToFirestore();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Cart(
-                      images: product["images"][0],
-                      title: product['title'],
-                      price: product['price'],
-                    ),
+                    builder: (context) => const Cart(),
                   ),
                 );
               },
@@ -187,7 +222,5 @@ class _ProductsDetailsState extends State<ProductsDetails> {
         ),
       ),
     );
-    
   }
-  
 }

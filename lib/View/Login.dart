@@ -37,27 +37,6 @@ class _LoginState extends State<Login> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        // actions: [
-        //   Padding(
-        //     padding: const EdgeInsets.only(right: 6),
-        //     child: Consumer<DarkModeProvider>(
-        //       builder: (context, themeProvider, child) {
-        //         return IconButton(
-        //           icon: Icon(
-        //             themeProvider.isDarkMode
-        //                 ? Icons.light_mode
-        //                 : Icons.dark_mode,
-        //             size: 30,
-
-        //           ),
-        //           onPressed: () {
-        //             themeProvider.toggleTheme();
-        //           },
-        //         );
-        //       },
-        //     ),
-        //   ),
-        // ],
       ),
       body: Center(
         child: Padding(

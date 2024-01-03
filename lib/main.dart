@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/View%20Model/DarkModeProvider.dart';
-import 'package:flutter_application_2/View%20Model/GoogleAuthenticationProvider.dart';
-import 'package:flutter_application_2/View%20Model/ProviderDemo.dart';
+import 'package:flutter_application_2/Controller/DarkModeProvider.dart';
+import 'package:flutter_application_2/Controller/GmailProvider.dart';
+import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
+import 'package:flutter_application_2/Controller/ApiProvider.dart';
 import 'package:flutter_application_2/View/SplashScreen.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
@@ -30,10 +31,10 @@ class _MyAppState extends State<MyApp> {
          //////////   PROVIDERS    //////////
 
       providers: [
-        ChangeNotifierProvider(create: (context) => ProviderClass()),
+        ChangeNotifierProvider(create: (context) => ApiProvider()),
         ChangeNotifierProvider(create: (context) => GoogleAuthenticationProvider()),
         ChangeNotifierProvider(create: (context) => DarkModeProvider()),
-        // ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => GmailProvider()),
       ],
       child: const MaterialApp(
         title: "QuizApp",

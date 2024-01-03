@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Controller/GmailProvider.dart';
 import 'package:flutter_application_2/View/Eapp.dart';
 import 'package:flutter_application_2/View/Login.dart';
-import 'package:flutter_application_2/View%20Model/GoogleAuthenticationProvider.dart';
+import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
@@ -22,7 +23,6 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       // App Bar
 
       appBar: AppBar(
@@ -91,38 +91,16 @@ class _SignupState extends State<Signup> {
                       // Sign up Button
 
                       child: ElevatedButton(
-                        onPressed: () async {
-                          try {
-                            final credential =
-                                await FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                              email: emailController.text,
-                              password: passwordController.text,
-                            );
-
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Eapp()),
-                            );
-                                                    } on FirebaseAuthException catch (e) {
-                            if (e.code == 'weak-password') {
-                              print('The password provided is too weak.');
-                            } else if (e.code == 'email-already-in-use') {
-                              print(
-                                  'The account already exists for that email.');
-                            } else {
-                              print(e);
-                            }
-                          } catch (e) {
-                            print(e);
-                          }
+                        onPressed: () {
+                          Provider.of<GmailProvider>(context, listen: false)
+                              .gmailSigning(
+                                  context, emailController, passwordController);
                         },
                         style: ButtonStyle(
-                          fixedSize:
-                              MaterialStateProperty.all(const Size(170, 44)),
-                          backgroundColor: MaterialStateProperty.all(Colors.black)
-                        ),
+                            fixedSize:
+                                MaterialStateProperty.all(const Size(170, 44)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.black)),
                         child: const Text('SIGN UP',
                             style: TextStyle(
                               fontSize: 20,
@@ -157,8 +135,8 @@ class _SignupState extends State<Signup> {
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
-                      "-------------------------or sign in with-------------------------",
-                     ),
+                    "-------------------------or sign in with-------------------------",
+                  ),
                 ),
                 const SizedBox(height: 3),
                 Row(
@@ -169,8 +147,7 @@ class _SignupState extends State<Signup> {
                     GestureDetector(
                       onTap: () async {
                         GoogleAuthenticationProvider provider =
-                            Provider.of<GoogleAuthenticationProvider>(
-                                context,
+                            Provider.of<GoogleAuthenticationProvider>(context,
                                 listen: false);
                         User? user = await provider.signInWithGoogle();
 
