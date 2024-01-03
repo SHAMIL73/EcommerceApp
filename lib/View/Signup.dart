@@ -14,16 +14,19 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  // Textfield Controller
+
+//                       // Textfield Controller //                        //
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  // Google Authentication
+//                       // Google Authentication //                      //
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // App Bar
+
+//                      // App Bar //                                    //
 
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
@@ -35,7 +38,7 @@ class _SignupState extends State<Signup> {
         ),
       ),
 
-      // Body
+//                     // Body //                                      //
 
       body: Center(
         child: Padding(
@@ -55,7 +58,7 @@ class _SignupState extends State<Signup> {
 
                 const SizedBox(height: 20.0),
 
-                // Email Textfield
+ //                     // Email Textfield //                         //
 
                 TextField(
                   controller: emailController,
@@ -67,7 +70,7 @@ class _SignupState extends State<Signup> {
 
                 const SizedBox(height: 10.0),
 
-                // Password Textfield
+ //                      // Password Textfield //                   //
 
                 TextField(
                   controller: passwordController,
@@ -80,7 +83,7 @@ class _SignupState extends State<Signup> {
 
                 const SizedBox(height: 20.0),
 
-                // START OF ROW
+//                       // START OF ROW //                        //
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +91,7 @@ class _SignupState extends State<Signup> {
                     Container(
                       margin: const EdgeInsets.only(left: 64),
 
-                      // Sign up Button
+//                      // Sign up Button //                      //
 
                       child: ElevatedButton(
                         onPressed: () {
@@ -96,6 +99,9 @@ class _SignupState extends State<Signup> {
                               .gmailSigning(
                                   context, emailController, passwordController);
                         },
+
+//                      // Button Style //                       //
+
                         style: ButtonStyle(
                             fixedSize:
                                 MaterialStateProperty.all(const Size(170, 44)),
@@ -110,10 +116,13 @@ class _SignupState extends State<Signup> {
                       ),
                     ),
 
-                    // Blue Color Login Button On Right Side of the Textfield
+//                    // Blue Color Login Button On Right Side of the Textfield//             //
 
                     TextButton(
                       onPressed: () {
+
+//                       //Navigation//                      //
+
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -130,7 +139,7 @@ class _SignupState extends State<Signup> {
                   ],
                 ),
 
-                // END OF ROW
+//                // END OF ROW//                  //
 
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
@@ -142,7 +151,8 @@ class _SignupState extends State<Signup> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    // Google Button
+
+//                    // Google Button//                  //
 
                     GestureDetector(
                       onTap: () async {
@@ -152,6 +162,9 @@ class _SignupState extends State<Signup> {
                         User? user = await provider.signInWithGoogle();
 
                         if (user != null) {
+
+//                       //Navigation//                       //
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
