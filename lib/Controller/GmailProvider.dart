@@ -11,16 +11,14 @@ class GmailProvider extends ChangeNotifier {
       password: passwordController.text,
     );
 
-    if (credential != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const Eapp(),
-        ),
-      );
-      notifyListeners();
-    }
-  } on FirebaseAuthException catch (e) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Eapp(),
+      ),
+    );
+    notifyListeners();
+    } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
       print('The password provided is too weak.');
     } else if (e.code == 'email-already-in-use') {

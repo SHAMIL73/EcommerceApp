@@ -1,59 +1,110 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_2/Controller/CartProvider.dart';
 
-class Cart extends StatefulWidget {
-  const Cart(
-      {Key? key,})
-      : super(key: key);
+class CartPage extends StatefulWidget {
+  const CartPage({super.key});
 
   @override
-  State<Cart> createState() => _CartState();
+  State<CartPage> createState() => _CartPageState();
 }
 
-class _CartState extends State<Cart> {
-  final CollectionReference cart =
-      FirebaseFirestore.instance.collection('cart');
+class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: StreamBuilder(
-          stream: cart.snapshots(),
-          builder: (context, AsyncSnapshot snapshot) {
-            snapshot.hasData; {
-              return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
+      appBar: AppBar(
+        title: const Text('Cart'),
+      ),
+      body: Consumer<CartProvider>(
+        builder: (context, cartProvider, _) {
+          return FutureBuilder<List<Map<String, dynamic>>>(
+            future: cartProvider.getCartList(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else {
+                List<Map<String, dynamic>> cartList = snapshot.data!;
+
+                return ListView.builder(
+                  itemCount: cartList.length,
                   itemBuilder: (context, index) {
-                    final DocumentSnapshot cartSnap = snapshot.data.docs[index];
-                    return Column(
-                      children: [
-                        const SizedBox(height: 20,),
-                        Container(width: double.infinity,
-                        height: 50,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2.5,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),child: Column(
-                      children: [
-                        SizedBox(
-                          width: 50,
-                          height: 40,
-                          child: Image.network(
-                              cartSnap['thumbnail'],
+                    Map<String, dynamic> product = cartList[index];
+                    return Dismissible(
+                      key: UniqueKey(),
+                      onDismissed: (direction) {
+                        // Remove item from cart when dismissed
+                        cartProvider.removeFromCart(product['id'].toString());
+                      },
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerRight,
+                        child: const Padding(
+                          padding: EdgeInsets.only(right: 16.0),
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 100,
+                              child: Image.network(product['thumbnail']),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 60),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 50,
+                                  width: 138,
+                                    child: Text(
+                                      product['title'],
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    child: Text(
+                                      'Price: \$${product['price']}',
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Text(
+                              '<<REMOVE',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     );
-                  }
-                  );
-            }
-          },
-        ));
+                  },
+                );
+              }
+            },
+          );
+        },
+      ),
+    );
   }
 }

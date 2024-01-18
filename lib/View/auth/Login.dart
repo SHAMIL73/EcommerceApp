@@ -1,35 +1,36 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Controller/GmailProvider.dart';
+import 'package:flutter_application_2/Const/Color.dart';
 import 'package:flutter_application_2/View/Eapp.dart';
-import 'package:flutter_application_2/View/Login.dart';
-import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_application_2/View/auth/Signup.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-class Signup extends StatefulWidget {
-  const Signup({super.key});
-
+class Login extends StatefulWidget {
+  const Login({super.key});
   @override
-  State<Signup> createState() => _SignupState();
+  State<Login> createState() => _LoginState();
 }
 
-class _SignupState extends State<Signup> {
-
-//                       // Textfield Controller //                        //
-
+class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final auth = FirebaseAuth.instance;
 
-//                       // Google Authentication //                      //
+  Future<UserCredential?> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-//                      // App Bar //                                    //
-
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(0, 0, 0, 0),
         title: const Text(
           'Eapp',
           style: TextStyle(
@@ -37,9 +38,6 @@ class _SignupState extends State<Signup> {
           ),
         ),
       ),
-
-//                     // Body //                                      //
-
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -49,17 +47,13 @@ class _SignupState extends State<Signup> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Sign up',
+                  'Log in',
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-
                 const SizedBox(height: 20.0),
-
- //                     // Email Textfield //                         //
-
                 TextField(
                   controller: emailController,
                   decoration: const InputDecoration(
@@ -67,11 +61,7 @@ class _SignupState extends State<Signup> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-
                 const SizedBox(height: 10.0),
-
- //                      // Password Textfield //                   //
-
                 TextField(
                   controller: passwordController,
                   obscureText: true,
@@ -80,67 +70,56 @@ class _SignupState extends State<Signup> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-
                 const SizedBox(height: 20.0),
-
-//                       // START OF ROW //                        //
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(left: 64),
-
-//                      // Sign up Button //                      //
-
+                      margin: const EdgeInsets.only(left: 71),
                       child: ElevatedButton(
-                        onPressed: () {
-                          Provider.of<GmailProvider>(context, listen: false)
-                              .gmailSigning(
-                                  context, emailController, passwordController);
+                        onPressed: () async {
+                          final userCredential =
+                              await auth.signInWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const Eapp(),
+                            ),
+                          );
                         },
-
-//                      // Button Style //                       //
-
                         style: ButtonStyle(
-                            fixedSize:
-                                MaterialStateProperty.all(const Size(170, 44)),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.black)),
-                        child: const Text('SIGN UP',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            )),
+                          fixedSize:
+                              MaterialStateProperty.all(const Size(170, 44)),
+                          backgroundColor: MaterialStateProperty.all(blackcolor)
+                        ),
+                        child:Text(
+                          'LOG IN',
+                          style: TextStyle(
+                            color: whitecolor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
                     ),
-
-//                    // Blue Color Login Button On Right Side of the Textfield//             //
-
                     TextButton(
                       onPressed: () {
-
-//                       //Navigation//                      //
-
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Login(),
+                            builder: (context) => const Signup(),
                           ),
                         );
                       },
-                      child: const Text(
-                        "log in",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.blue),
-                      ),
+                      child: const Text("sign up",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.blue)),
                     ),
                   ],
                 ),
-
-//                // END OF ROW//                  //
-
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
@@ -151,20 +130,11 @@ class _SignupState extends State<Signup> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-
-//                    // Google Button//                  //
-
                     GestureDetector(
                       onTap: () async {
-                        GoogleAuthenticationProvider provider =
-                            Provider.of<GoogleAuthenticationProvider>(context,
-                                listen: false);
-                        User? user = await provider.signInWithGoogle();
-
-                        if (user != null) {
-
-//                       //Navigation//                       //
-
+                        final UserCredential? userCredential =
+                            await signInWithGoogle();
+                        if (userCredential != null) {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

@@ -1,36 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Const/Color.dart';
+import 'package:flutter_application_2/Controller/GmailProvider.dart';
 import 'package:flutter_application_2/View/Eapp.dart';
-import 'package:flutter_application_2/View/Signup.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_application_2/View/auth/Login.dart';
+import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
+import 'package:provider/provider.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
+
   @override
-  State<Login> createState() => _LoginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup> {
+//                       // Textfield Controller //                        //
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final auth = FirebaseAuth.instance;
 
-  Future<UserCredential?> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
+//                       // Google Authentication //                      //
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+//                      // App Bar //                                    //
+
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(0, 0, 0, 0),
         title: const Text(
           'Eapp',
           style: TextStyle(
@@ -38,6 +35,9 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
+
+//                     // Body //                                      //
+
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -46,14 +46,18 @@ class _LoginState extends State<Login> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Log in',
+                 const Text(
+                  'Sign up',
                   style: TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+
                 const SizedBox(height: 20.0),
+
+                //                     // Email Textfield //                         //
+
                 TextField(
                   controller: emailController,
                   decoration: const InputDecoration(
@@ -61,7 +65,11 @@ class _LoginState extends State<Login> {
                     border: OutlineInputBorder(),
                   ),
                 ),
+
                 const SizedBox(height: 10.0),
+
+                //                      // Password Textfield //                   //
+
                 TextField(
                   controller: passwordController,
                   obscureText: true,
@@ -70,56 +78,66 @@ class _LoginState extends State<Login> {
                     border: OutlineInputBorder(),
                   ),
                 ),
+
                 const SizedBox(height: 20.0),
+
+//                       // START OF ROW //                        //
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(left: 71),
+                      margin: const EdgeInsets.only(left: 64),
+
+//                      // Sign up Button //                      //
+
                       child: ElevatedButton(
-                        onPressed: () async {
-                          final userCredential =
-                              await auth.signInWithEmailAndPassword(
-                            email: emailController.text,
-                            password: passwordController.text,
-                          );
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Eapp(),
-                            ),
-                          );
+                        onPressed: () {
+                          Provider.of<GmailProvider>(context, listen: false)
+                              .gmailSigning(
+                                  context, emailController, passwordController);
                         },
+
+//                      // Button Style //                       //
+
                         style: ButtonStyle(
-                          fixedSize:
-                              MaterialStateProperty.all(const Size(170, 44)),
-                          backgroundColor: MaterialStateProperty.all(Colors.black)
-                        ),
-                        child: const Text(
-                          'LOG IN',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                            fixedSize:
+                                MaterialStateProperty.all(const Size(170, 44)),
+                            backgroundColor:
+                                MaterialStateProperty.all(blackcolor)),
+                        child: Text('SIGN UP',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: whitecolor,
+                            )),
                       ),
                     ),
+
+//                    // Blue Color Login Button On Right Side of the Textfield//             //
+
                     TextButton(
                       onPressed: () {
+//                       //Navigation//                      //
+
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Signup(),
+                            builder: (context) => const Login(),
                           ),
                         );
                       },
-                      child: const Text("sign up",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.blue)),
+                      child: const Text(
+                        "log in",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue),
+                      ),
                     ),
                   ],
                 ),
+
+//                // END OF ROW//                  //
+
                 const Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
@@ -130,11 +148,18 @@ class _LoginState extends State<Login> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+//                    // Google Button//                  //
+
                     GestureDetector(
                       onTap: () async {
-                        final UserCredential? userCredential =
-                            await signInWithGoogle();
-                        if (userCredential != null) {
+                        GoogleAuthenticationProvider provider =
+                            Provider.of<GoogleAuthenticationProvider>(context,
+                                listen: false);
+                        User? user = await provider.signInWithGoogle();
+
+                        if (user != null) {
+//                       //Navigation//                       //
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(

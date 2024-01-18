@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Const/Color.dart';
 import 'dart:async';
-import 'package:flutter_application_2/View/Signup.dart';
+import 'package:flutter_application_2/View/auth/Signup.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Add a delay and then navigate to the Dashboard
+    // Loading Time
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
@@ -23,41 +24,39 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Colors.white, // Set the background color
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // Game logo as a white icon (replace with your icon)
+          children: [
             Icon(
-              Icons.trolley, // Replace with your game's icon
-              color: Colors.black,
+              Icons.trolley,
+              color: blackcolor,
               size: 150,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             // Game title
             Text(
               'Eapp',
               style: TextStyle(
-                color: Colors.black,
+                color: blackcolor,
                 fontSize: 29.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             // Loading text and animation
             Column(mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                  valueColor: AlwaysStoppedAnimation<Color>(blackcolor),
                 ),
              
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               'Loading...',
               style: TextStyle(
-                color: Colors.black,
+                color: blackcolor,
                 fontSize: 16.0,
               ),
             ),

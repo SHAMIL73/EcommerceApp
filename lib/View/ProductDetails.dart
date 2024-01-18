@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_application_2/Const/Color.dart';
+import 'package:flutter_application_2/Controller/CartProvider.dart';
 import 'package:flutter_application_2/Model/ApiController.dart';
-import 'package:flutter_application_2/Controller/DarkModeProvider.dart';
+import 'package:flutter_application_2/Controller/DarkModeGetx.dart';
 import 'package:flutter_application_2/View/Cart.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class ProductsDetails extends StatefulWidget {
@@ -16,83 +19,73 @@ class ProductsDetails extends StatefulWidget {
 }
 
 class _ProductsDetailsState extends State<ProductsDetails> {
-  Color _getTextColor(BuildContext context) {
-    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
-    return isDarkMode ? Colors.white : Colors.black;
+  late Color textColor;
+  late Color backgroundColor;
+
+  @override
+  void initState() {
+    super.initState();
+    Get.put(DarkModeGetx());
+    updateThemeColors();
   }
 
-  Color _getTextColor2(BuildContext context) {
-    bool isDarkMode = Provider.of<DarkModeProvider>(context).isDarkMode;
-    return isDarkMode ? Colors.black : Colors.white;
+  void updateThemeColors() {
+    setState(() {
+      textColor = getTextColor();
+      backgroundColor = getBackgroundColor();
+    });
   }
 
-  final CollectionReference Add_cart = FirebaseFirestore.instance.collection('cart');
+  Color getTextColor() {
+    return Get.find<DarkModeGetx>().isDarkMode ? whitecolor : blackcolor;
+  }
+
+  Color getBackgroundColor() {
+    return Get.find<DarkModeGetx>().isDarkMode ? blackcolor : whitecolor;
+  }
+
+  Color getTextColor2() {
+    return Get.find<DarkModeGetx>().isDarkMode ? blackcolor : whitecolor;
+  }
+
+  Color getBackgroundColor2() {
+    return Get.find<DarkModeGetx>().isDarkMode ? whitecolor : blackcolor;
+  }
+
+  final CollectionReference Add_Users =
+      FirebaseFirestore.instance.collection('Users');
   late final Product product;
   late final CollectionReference cart;
-Future<void> addToFirestore() async {
-    final data = {
-      'thumbnail': widget.product.thumbnail,
-      'images': widget.product.images,
-      'price': widget.product.price,
-      'discription': widget.product.description,
-      'discountPercentage': widget.product.discountPercentage,
-      'rating': widget.product.rating,
-      'title': widget.product.title,
-      'stock': widget.product.stock,
-    };
 
-    final QuerySnapshot<Object?> existingProducts =
-    await Add_cart.where('title', isEqualTo: widget.product.title).get();
-
-if (existingProducts.docs.isEmpty) {
-  Add_cart.add(data);
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Added to Cart'),
-    ),
-  );
-} else {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text('Product already in Cart'),
-    ),
-  );
-}
-
-  }
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
     return Scaffold(
-      backgroundColor: Provider.of<DarkModeProvider>(context).isDarkMode
-          ? Colors.black
-          : Colors.white,
+      backgroundColor:
+          Get.find<DarkModeGetx>().isDarkMode ? Colors.black : Colors.white,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: _getTextColor(context)),
+        iconTheme: IconThemeData(color: getTextColor()),
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
         title: Text(
           product.brand,
           style: TextStyle(
-            color: _getTextColor(context),
+            color: getTextColor(),
           ),
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 6),
-            child: Consumer<DarkModeProvider>(
-              builder: (context, themeProvider, child) {
-                return IconButton(
-                  icon: Icon(
-                    themeProvider.isDarkMode
-                        ? Icons.light_mode
-                        : Icons.dark_mode,
-                    size: 30,
-                    color: _getTextColor(context),
-                  ),
-                  onPressed: () {
-                    themeProvider.toggleTheme();
-                  },
-                );
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              icon: Icon(
+                Get.find<DarkModeGetx>().isDarkMode
+                    ? Icons.light_mode
+                    : Icons.dark_mode,
+                size: 30,
+                color: textColor,
+              ),
+              onPressed: () {
+                Get.find<DarkModeGetx>().toggleTheme();
+                updateThemeColors();
               },
             ),
           ),
@@ -116,7 +109,7 @@ if (existingProducts.docs.isEmpty) {
           ),
           Text(
             product.title,
-            style: TextStyle(color: _getTextColor(context), fontSize: 20),
+            style: TextStyle(color: getTextColor(), fontSize: 20),
           ),
           const SizedBox(height: 25),
           Padding(
@@ -132,8 +125,8 @@ if (existingProducts.docs.isEmpty) {
                   TextSpan(
                     text: product.description,
                     style: TextStyle(
-            color: _getTextColor(context),
-            fontSize: 15,
+                      color: getTextColor(),
+                      fontSize: 15,
                     ),
                   ),
                 ],
@@ -141,7 +134,8 @@ if (existingProducts.docs.isEmpty) {
             ),
           ),
           const SizedBox(height: 70),
-          Row(mainAxisAlignment: MainAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 15),
@@ -149,11 +143,20 @@ if (existingProducts.docs.isEmpty) {
                   padding: const EdgeInsets.only(top: 3),
                   child: Row(
                     children: [
-                      Text("FREE DELIVERY",style: TextStyle(
-                            color: _getTextColor(context),
-                            fontWeight: FontWeight.bold,
-                          ),),
-                          const Icon(Icons.card_travel),
+                      Text(
+                        "FREE DELIVERY",
+                        style: TextStyle(
+                          color: getTextColor(),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Icon(
+                        Icons.card_travel,
+                        color: getTextColor(),
+                      ),
                     ],
                   ),
                 ),
@@ -163,63 +166,55 @@ if (existingProducts.docs.isEmpty) {
         ],
       ),
       bottomNavigationBar: BottomAppBar(
-        color: _getTextColor2(context),
-        child: Container(
-          height: 56.0,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: _getTextColor(context),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            GestureDetector(
-              onTap: () {
-                addToFirestore();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Cart(),
-                  ),
-                );
-              },
-              child: Container(
-                height: 40,
-                width: 140,
-                decoration: BoxDecoration(
-                  color: _getTextColor2(context),
-                  borderRadius: BorderRadius.circular(4.0),
+        color: Colors.transparent,
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          GestureDetector(
+            onTap: () {
+              Provider.of<CartProvider>(context, listen: false)
+                  .cartToFirestore(product);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CartPage(),
                 ),
-                child: Center(
-                  child: Text(
-                    'ADD TO CART',
-                    style: TextStyle(
-                      color: _getTextColor(context),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Container(
+              );
+            },
+            child: Container(
               height: 40,
               width: 140,
               decoration: BoxDecoration(
-                color: _getTextColor2(context),
+                color: getTextColor(),
                 borderRadius: BorderRadius.circular(4.0),
               ),
               child: Center(
                 child: Text(
-                  'ADD TO WISHLIST',
+                  'ADD TO CART',
                   style: TextStyle(
-                    color: _getTextColor(context),
+                    color: getTextColor2(),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            )
-          ]),
-        ),
+            ),
+          ),
+          Container(
+            height: 40,
+            width: 140,
+            decoration: BoxDecoration(
+              color: getTextColor(),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: Center(
+              child: Text(
+                'ADD TO WISHLIST',
+                style: TextStyle(
+                  color: getTextColor2(),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )
+        ]),
       ),
     );
   }
