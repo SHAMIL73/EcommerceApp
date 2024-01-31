@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/Const/Color.dart';
 import 'package:flutter_application_2/Controller/GmailProvider.dart';
-import 'package:flutter_application_2/View/Eapp.dart';
+import 'package:flutter_application_2/View/BottomNavigationBar.dart';
 import 'package:flutter_application_2/View/auth/Login.dart';
 import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
 import 'package:provider/provider.dart';
@@ -117,8 +117,7 @@ class _SignupState extends State<Signup> {
 //                    // Blue Color Login Button On Right Side of the Textfield//             //
 
                     TextButton(
-                      onPressed: () {
-//                       //Navigation//                      //
+                      onPressed: () {//
 
                         Navigator.pushReplacement(
                           context,
@@ -163,7 +162,7 @@ class _SignupState extends State<Signup> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Eapp(),
+                              builder: (context) =>  const BottomBar(),
                             ),
                           );
                         }

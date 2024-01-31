@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_application_2/Controller/CartProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_2/Controller/WishProvider.dart';
 
-class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+class Wishlist extends StatefulWidget {
+  const Wishlist({super.key});
 
   @override
-  State<CartPage> createState() => _CartPageState();
+  State<Wishlist> createState() => _WishlistState();
 }
 
-class _CartPageState extends State<CartPage> {
+class _WishlistState extends State<Wishlist> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cart'),
+        title: const Text('Wishlist'),
       ),
-      body: Consumer<CartProvider>(
-        builder: (context, cartProvider, _) {
+      body: Consumer<WishProvider>(
+        builder: (context, WishProvider, _) {
           return FutureBuilder<List<Map<String, dynamic>>>(
-            future: cartProvider.getCartList(),
+            future: WishProvider.getWishList(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -30,17 +31,17 @@ class _CartPageState extends State<CartPage> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               } else {
-                List<Map<String, dynamic>> cartList = snapshot.data!;
+                List<Map<String, dynamic>> cartlist2 = snapshot.data!;
 
                 return ListView.builder(
-                  itemCount: cartList.length,
+                  itemCount: cartlist2.length,
                   itemBuilder: (context, index) {
-                    Map<String, dynamic> product = cartList[index];
+                    Map<String, dynamic> product = cartlist2[index];
                     return Dismissible(
                       key: UniqueKey(),
                       onDismissed: (direction) {
                         // Remove item from cart when dismissed
-                        cartProvider.removeFromCart(product['id'].toString());
+                        WishProvider.removeFromWish(product['id'].toString());
                       },
                       background: Container(
                         color: Colors.red,
@@ -60,7 +61,6 @@ class _CartPageState extends State<CartPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              height: 80,
                               width: 100,
                               child: Image.network(product['thumbnail']),
                             ),

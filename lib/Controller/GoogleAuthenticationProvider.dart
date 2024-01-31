@@ -53,4 +53,13 @@ class GoogleAuthenticationProvider extends ChangeNotifier {
 
     return null;
   }
+
+  void logout(BuildContext context) async {
+  await _auth.signOut();
+  await _googleSignIn.signOut();
+  _user = null; // Set the user to null after signing out
+  notifyListeners(); // Notify listeners after updating the state
+  print('signed out');
+}
+
 }

@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application_2/Const/Color.dart';
 import 'package:flutter_application_2/Controller/CartProvider.dart';
+import 'package:flutter_application_2/Controller/WishProvider.dart';
 import 'package:flutter_application_2/Model/ApiController.dart';
 import 'package:flutter_application_2/Controller/DarkModeGetx.dart';
-import 'package:flutter_application_2/View/Cart.dart';
+import 'package:flutter_application_2/View/Wishlist.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -19,9 +20,6 @@ class ProductsDetails extends StatefulWidget {
 }
 
 class _ProductsDetailsState extends State<ProductsDetails> {
-  late Color textColor;
-  late Color backgroundColor;
-
   @override
   void initState() {
     super.initState();
@@ -31,8 +29,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
 
   void updateThemeColors() {
     setState(() {
-      textColor = getTextColor();
-      backgroundColor = getBackgroundColor();
+      getTextColor();
     });
   }
 
@@ -40,16 +37,8 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     return Get.find<DarkModeGetx>().isDarkMode ? whitecolor : blackcolor;
   }
 
-  Color getBackgroundColor() {
-    return Get.find<DarkModeGetx>().isDarkMode ? blackcolor : whitecolor;
-  }
-
   Color getTextColor2() {
     return Get.find<DarkModeGetx>().isDarkMode ? blackcolor : whitecolor;
-  }
-
-  Color getBackgroundColor2() {
-    return Get.find<DarkModeGetx>().isDarkMode ? whitecolor : blackcolor;
   }
 
   final CollectionReference Add_Users =
@@ -62,34 +51,16 @@ class _ProductsDetailsState extends State<ProductsDetails> {
     final product = widget.product;
     return Scaffold(
       backgroundColor:
-          Get.find<DarkModeGetx>().isDarkMode ? Colors.black : Colors.white,
+          Get.find<DarkModeGetx>().isDarkMode ? Colors.white : Colors.black,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: getTextColor()),
+        iconTheme: IconThemeData(color: getTextColor2()),
         backgroundColor: const Color.fromARGB(0, 0, 0, 0),
         title: Text(
           product.brand,
           style: TextStyle(
-            color: getTextColor(),
+            color: getTextColor2(),
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: IconButton(
-              icon: Icon(
-                Get.find<DarkModeGetx>().isDarkMode
-                    ? Icons.light_mode
-                    : Icons.dark_mode,
-                size: 30,
-                color: textColor,
-              ),
-              onPressed: () {
-                Get.find<DarkModeGetx>().toggleTheme();
-                updateThemeColors();
-              },
-            ),
-          ),
-        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -99,6 +70,9 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               height: 309,
               enableInfiniteScroll: true,
               viewportFraction: 1.0,
+              autoPlay: true, // Enable auto play
+              autoPlayInterval:
+                  Duration(seconds: 2), // Set the interval to 2 seconds
             ),
             items: product.images.map<Widget>((imageUrl) {
               return SizedBox(
@@ -109,7 +83,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
           ),
           Text(
             product.title,
-            style: TextStyle(color: getTextColor(), fontSize: 20),
+            style: TextStyle(color: getTextColor2(), fontSize: 20),
           ),
           const SizedBox(height: 25),
           Padding(
@@ -125,7 +99,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                   TextSpan(
                     text: product.description,
                     style: TextStyle(
-                      color: getTextColor(),
+                      color: getTextColor2(),
                       fontSize: 15,
                     ),
                   ),
@@ -146,7 +120,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                       Text(
                         "FREE DELIVERY",
                         style: TextStyle(
-                          color: getTextColor(),
+                          color: getTextColor2(),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -155,7 +129,29 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                       ),
                       Icon(
                         Icons.card_travel,
-                        color: getTextColor(),
+                        color: getTextColor2(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 200),
+                        child: Container(
+                          width:
+                              35.0, // Set the width and height according to your requirements
+                          height: 35.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: getTextColor2(),
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Provider.of<WishProvider>(context, listen: false)
+                                  .wishToFirestore(product);
+                            },
+                            child: Icon(
+                              Icons.favorite,
+                              color: getTextColor(),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -172,44 +168,51 @@ class _ProductsDetailsState extends State<ProductsDetails> {
             onTap: () {
               Provider.of<CartProvider>(context, listen: false)
                   .cartToFirestore(product);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CartPage(),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const CartPage(),
+              //   ),
+              // );
             },
             child: Container(
               height: 40,
               width: 140,
               decoration: BoxDecoration(
-                color: getTextColor(),
+                color: getTextColor2(),
                 borderRadius: BorderRadius.circular(4.0),
               ),
               child: Center(
                 child: Text(
                   'ADD TO CART',
                   style: TextStyle(
-                    color: getTextColor2(),
+                    color: getTextColor(),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
           ),
-          Container(
-            height: 40,
-            width: 140,
-            decoration: BoxDecoration(
-              color: getTextColor(),
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: Center(
-              child: Text(
-                'ADD TO WISHLIST',
-                style: TextStyle(
-                  color: getTextColor2(),
-                  fontWeight: FontWeight.bold,
+          GestureDetector(
+            onTap: () {
+              
+
+              
+            },
+            child: Container(
+              height: 40,
+              width: 140,
+              decoration: BoxDecoration(
+                color: getTextColor2(),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              child: Center(
+                child: Text(
+                  'BUY NOW',
+                  style: TextStyle(
+                    color: getTextColor(),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

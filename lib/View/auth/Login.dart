@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/Const/Color.dart';
-import 'package:flutter_application_2/View/Eapp.dart';
+import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
+import 'package:flutter_application_2/View/BottomNavigationBar.dart';
 import 'package:flutter_application_2/View/auth/Signup.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -16,16 +17,7 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = TextEditingController();
   final auth = FirebaseAuth.instance;
 
-  Future<UserCredential?> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +78,7 @@ class _LoginState extends State<Login> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Eapp(),
+                              builder: (context) => const BottomBar(),
                             ),
                           );
                         },
@@ -132,13 +124,18 @@ class _LoginState extends State<Login> {
                   children: [
                     GestureDetector(
                       onTap: () async {
-                        final UserCredential? userCredential =
-                            await signInWithGoogle();
-                        if (userCredential != null) {
+                        GoogleAuthenticationProvider provider =
+                            Provider.of<GoogleAuthenticationProvider>(context,
+                                listen: false);
+                        User? user = await provider.signInWithGoogle();
+
+                        if (user != null) {
+//                       //Navigation//                       //
+
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Eapp(),
+                              builder: (context) =>  const BottomBar(),
                             ),
                           );
                         }

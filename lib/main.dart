@@ -3,6 +3,7 @@ import 'package:flutter_application_2/Controller/CartProvider.dart';
 import 'package:flutter_application_2/Controller/GmailProvider.dart';
 import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
 import 'package:flutter_application_2/Controller/ApiProvider.dart';
+import 'package:flutter_application_2/Controller/WishProvider.dart';
 import 'package:flutter_application_2/View/SplashScreen.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => GoogleAuthenticationProvider()),
         ChangeNotifierProvider(create: (context) => GmailProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => WishProvider()),
       ],
       child:  const GetMaterialApp(
         title: "QuizApp",
