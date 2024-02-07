@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-Color blackcolor = Colors.black;
-Color whitecolor = Colors.white;
+// Color blackcolor = Colors.black;
+// Color whitecolor = Colors.white;

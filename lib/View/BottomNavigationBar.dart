@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Const/Color.dart';
-import 'package:flutter_application_2/Controller/DarkModeGetx.dart';
-import 'package:flutter_application_2/View/Cart.dart';
-import 'package:flutter_application_2/View/Eapp.dart';
-import 'package:flutter_application_2/View/Profile.dart';
-import 'package:flutter_application_2/View/Wishlist.dart';
+import 'package:flutter_application_2/Controller/Getx/DarkModeGetx.dart';
+import 'package:flutter_application_2/View/UI/Cart.dart';
+import 'package:flutter_application_2/View/UI/Eapp.dart';
+import 'package:flutter_application_2/View/UI/Order.dart';
+import 'package:flutter_application_2/View/UI/Profile.dart';
+import 'package:flutter_application_2/View/UI/Wishlist.dart';
 import 'package:get/get.dart';
 
 
@@ -20,9 +20,10 @@ class _BottomBarState extends State<BottomBar> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    Eapp(),
+    const Eapp(),
     const Wishlist(),
     const CartPage(),
+    const Orderpage(),
     const ProfilePage(),
   ];
 
@@ -42,11 +43,11 @@ late Color textColor;
   }
 
   Color getTextColor() {
-    return Get.find<DarkModeGetx>().isDarkMode ? whitecolor : blackcolor;
+    return Get.find<DarkModeGetx>().isDarkMode ? Colors.white : Colors.black;
   }
 
   Color getTextColor2() {
-    return Get.find<DarkModeGetx>().isDarkMode ? blackcolor : whitecolor;
+    return Get.find<DarkModeGetx>().isDarkMode ? Colors.black : Colors.white;
   }
 
   @override
@@ -61,7 +62,7 @@ late Color textColor;
             _currentIndex = index;
           });
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(backgroundColor: Color.fromARGB(255, 94, 89, 89),
             icon: Icon(Icons.home),
             label: 'Home',
@@ -73,6 +74,10 @@ late Color textColor;
           BottomNavigationBarItem(
             icon: Icon(Icons.trolley),
             label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

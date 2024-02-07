@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Const/Color.dart';
-import 'package:flutter_application_2/Model/ApiController.dart';
-import 'package:flutter_application_2/Controller/DarkModeGetx.dart';
-import 'package:flutter_application_2/View/ProductDetails.dart';
-import 'package:flutter_application_2/Controller/ApiProvider.dart';
+import 'package:flutter_application_2/Model/ApiClass.dart';
+import 'package:flutter_application_2/Controller/Getx/DarkModeGetx.dart';
+import 'package:flutter_application_2/View/UI/ProductDetails.dart';
+import 'package:flutter_application_2/Controller/Providers/ApiProvider.dart';
+import 'package:flutter_application_2/View/UI/Search.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:carousel_slider/carousel_slider.dart'; // Import CarouselSlider
@@ -31,11 +31,11 @@ class _EappState extends State<Eapp> {
   }
 
   Color getTextColor() {
-    return Get.find<DarkModeGetx>().isDarkMode ? whitecolor : blackcolor;
+    return Get.find<DarkModeGetx>().isDarkMode ? Colors.white : Colors.black;
   }
 
   Color getTextColor2() {
-    return Get.find<DarkModeGetx>().isDarkMode ? blackcolor : whitecolor;
+    return Get.find<DarkModeGetx>().isDarkMode ? Colors.black : Colors.white;
   }
 
   @override
@@ -44,12 +44,33 @@ class _EappState extends State<Eapp> {
       backgroundColor: getTextColor2(),
       appBar: AppBar(
         backgroundColor: getTextColor(),
-        title: Text(
-          'Eapp',
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: getTextColor2(),
-          ),
+        title: Row(
+          children: [
+            Text(
+              'Eapp',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: getTextColor2(),
+              ),
+            ),
+            GestureDetector(
+              onTap: () =>
+             Navigator.push(context,
+            MaterialPageRoute(builder:(context) => SearchPage())
+            ),            
+              child: Container(
+                height: 30,
+                margin: EdgeInsets.only(left: 25),
+                width: 240,
+                decoration: BoxDecoration(
+                  border: Border.all(color: getTextColor2()),
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                child: Icon(Icons.search, color: getTextColor2()),
+                alignment: Alignment.topRight,
+              ),
+            ),
+          ],
         ),
         actions: [
           Padding(
@@ -73,23 +94,23 @@ class _EappState extends State<Eapp> {
       body: Column(
         children: [
           Container(
-          height: 250,
-          width: double.infinity,
-          color: getTextColor(),
-            child: Container(
+            height: 250,
+            width: double.infinity,
+            color: getTextColor(),
+            child: SizedBox(
               height: 240,
               child: CarouselSlider(
                 options: CarouselOptions(
                   enableInfiniteScroll: true,
                   viewportFraction: 2.0,
                   autoPlay: true,
-                  autoPlayInterval: Duration(seconds: 3),
+                  autoPlayInterval: const Duration(seconds: 3),
                 ),
                 items: Provider.of<ApiProvider>(context)
                     .fetchData
                     .products
                     .map<Widget>((product) {
-                  return Container(
+                  return SizedBox(
                     width: 300,
                     child: Image.network(product.thumbnail, fit: BoxFit.cover),
                   );
@@ -116,8 +137,7 @@ class _EappState extends State<Eapp> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            ProductsDetails(product: product),
+                        builder: (context) => ProductsDetails(product: product),
                       ),
                     );
                   },
@@ -164,7 +184,9 @@ class _EappState extends State<Eapp> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 5,),
+                            const SizedBox(
+                              height: 5,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

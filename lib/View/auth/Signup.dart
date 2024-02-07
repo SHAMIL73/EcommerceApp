@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Const/Color.dart';
-import 'package:flutter_application_2/Controller/GmailProvider.dart';
+import 'package:flutter_application_2/Controller/Providers/GmailProvider.dart';
 import 'package:flutter_application_2/View/BottomNavigationBar.dart';
 import 'package:flutter_application_2/View/auth/Login.dart';
-import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
+import 'package:flutter_application_2/Controller/Providers/GoogleAuthenticationProvider.dart';
 import 'package:provider/provider.dart';
 
 class Signup extends StatefulWidget {
@@ -104,12 +103,12 @@ class _SignupState extends State<Signup> {
                             fixedSize:
                                 MaterialStateProperty.all(const Size(170, 44)),
                             backgroundColor:
-                                MaterialStateProperty.all(blackcolor)),
-                        child: Text('SIGN UP',
+                                MaterialStateProperty.all(Colors.black)),
+                        child: const Text('SIGN UP',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
-                              color: whitecolor,
+                              color: Colors.white,
                             )),
                       ),
                     ),

@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Const/Color.dart';
-import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
+import 'package:flutter_application_2/Controller/Providers/GoogleAuthenticationProvider.dart';
 import 'package:flutter_application_2/View/BottomNavigationBar.dart';
 import 'package:flutter_application_2/View/auth/Signup.dart';
 import 'package:provider/provider.dart';
@@ -85,12 +84,12 @@ class _LoginState extends State<Login> {
                         style: ButtonStyle(
                           fixedSize:
                               MaterialStateProperty.all(const Size(170, 44)),
-                          backgroundColor: MaterialStateProperty.all(blackcolor)
+                          backgroundColor: MaterialStateProperty.all(Colors.black)
                         ),
-                        child:Text(
+                        child:const Text(
                           'LOG IN',
                           style: TextStyle(
-                            color: whitecolor,
+                            color: Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                           ),

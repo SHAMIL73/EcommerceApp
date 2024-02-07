@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Controller/CartProvider.dart';
-import 'package:flutter_application_2/Controller/GmailProvider.dart';
-import 'package:flutter_application_2/Controller/GoogleAuthenticationProvider.dart';
-import 'package:flutter_application_2/Controller/ApiProvider.dart';
-import 'package:flutter_application_2/Controller/WishProvider.dart';
+import 'package:flutter_application_2/Controller/Providers/CartProvider.dart';
+import 'package:flutter_application_2/Controller/Providers/GmailProvider.dart';
+import 'package:flutter_application_2/Controller/Providers/GoogleAuthenticationProvider.dart';
+import 'package:flutter_application_2/Controller/Providers/ApiProvider.dart';
+import 'package:flutter_application_2/Controller/Providers/WishProvider.dart';
 import 'package:flutter_application_2/View/SplashScreen.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';

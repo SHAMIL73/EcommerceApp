@@ -1,30 +1,31 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter_application_2/Const/Color.dart';
-import 'package:flutter_application_2/Controller/CartProvider.dart';
-import 'package:flutter_application_2/Controller/WishProvider.dart';
-import 'package:flutter_application_2/Model/ApiController.dart';
-import 'package:flutter_application_2/Controller/DarkModeGetx.dart';
-import 'package:flutter_application_2/View/Wishlist.dart';
-import 'package:get/get.dart';
+import 'package:flutter_application_2/Controller/Providers/CartProvider.dart';
+import 'package:flutter_application_2/Controller/Razorpay.dart';
+import 'package:flutter_application_2/Controller/Providers/WishProvider.dart';
+import 'package:flutter_application_2/Model/ApiClass.dart';
+import 'package:flutter_application_2/Controller/Getx/DarkModeGetx.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:get/get.dart';
 
 class ProductsDetails extends StatefulWidget {
   final Product product;
 
-  const ProductsDetails({super.key, required this.product});
+  const ProductsDetails({Key? key, required this.product}) : super(key: key);
 
   @override
   State<ProductsDetails> createState() => _ProductsDetailsState();
 }
-
 class _ProductsDetailsState extends State<ProductsDetails> {
+
+  razorpay razorpayinstance = razorpay();
   @override
   void initState() {
     super.initState();
     Get.put(DarkModeGetx());
     updateThemeColors();
+    razorpayinstance.handles(context);
   }
 
   void updateThemeColors() {
@@ -34,11 +35,11 @@ class _ProductsDetailsState extends State<ProductsDetails> {
   }
 
   Color getTextColor() {
-    return Get.find<DarkModeGetx>().isDarkMode ? whitecolor : blackcolor;
+    return Get.find<DarkModeGetx>().isDarkMode ? Colors.white : Colors.black;
   }
 
   Color getTextColor2() {
-    return Get.find<DarkModeGetx>().isDarkMode ? blackcolor : whitecolor;
+    return Get.find<DarkModeGetx>().isDarkMode ? Colors.black : Colors.white;
   }
 
   final CollectionReference Add_Users =
@@ -72,7 +73,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
               viewportFraction: 1.0,
               autoPlay: true, // Enable auto play
               autoPlayInterval:
-                  Duration(seconds: 2), // Set the interval to 2 seconds
+                  const Duration(seconds: 2), // Set the interval to 2 seconds
             ),
             items: product.images.map<Widget>((imageUrl) {
               return SizedBox(
@@ -135,7 +136,7 @@ class _ProductsDetailsState extends State<ProductsDetails> {
                         padding: const EdgeInsets.only(left: 200),
                         child: Container(
                           width:
-                              35.0, // Set the width and height according to your requirements
+                              35.0,
                           height: 35.0,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -163,61 +164,56 @@ class _ProductsDetailsState extends State<ProductsDetails> {
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.transparent,
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          GestureDetector(
-            onTap: () {
-              Provider.of<CartProvider>(context, listen: false)
-                  .cartToFirestore(product);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const CartPage(),
-              //   ),
-              // );
-            },
-            child: Container(
-              height: 40,
-              width: 140,
-              decoration: BoxDecoration(
-                color: getTextColor2(),
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              child: Center(
-                child: Text(
-                  'ADD TO CART',
-                  style: TextStyle(
-                    color: getTextColor(),
-                    fontWeight: FontWeight.bold,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Provider.of<CartProvider>(context, listen: false)
+                    .cartToFirestore(product);
+              },
+              child: Container(
+                height: 40,
+                width: 140,
+                decoration: BoxDecoration(
+                  color: getTextColor2(),
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                child: Center(
+                  child: Text(
+                    'ADD TO CART',
+                    style: TextStyle(
+                      color: getTextColor(),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              
-
-              
-            },
-            child: Container(
-              height: 40,
-              width: 140,
-              decoration: BoxDecoration(
-                color: getTextColor2(),
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-              child: Center(
-                child: Text(
-                  'BUY NOW',
-                  style: TextStyle(
-                    color: getTextColor(),
-                    fontWeight: FontWeight.bold,
+            GestureDetector(
+              onTap: () {
+                razorpayinstance.createOrder(context, 12);
+               },
+              child: Container(
+                height: 40,
+                width: 140,
+                decoration: BoxDecoration(
+                  color: getTextColor2(),
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                child: Center(
+                  child: Text(
+                    'BUY NOW',
+                    style: TextStyle(
+                      color: getTextColor(),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-          )
-        ]),
+          ],
+        ),
       ),
     );
   }

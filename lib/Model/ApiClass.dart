@@ -1,22 +1,22 @@
 import 'dart:convert';
 
-ApiController ApiControllerFromJson(String str) => ApiController.fromJson(json.decode(str));
-String ApiControllerToJson(ApiController data) => json.encode(data.toJson());
+ApiClass ApiClassFromJson(String str) => ApiClass.fromJson(json.decode(str));
+String ApiClassToJson(ApiClass data) => json.encode(data.toJson());
 
-class ApiController {
+class ApiClass {
   List<Product> products;
   int total;
   int skip;
   int limit;
 
-  ApiController({
+  ApiClass({
     required this.products,
     required this.total,
     required this.skip,
     required this.limit,
   });
 
-  factory ApiController.fromJson(Map<String, dynamic> json) => ApiController(
+  factory ApiClass.fromJson(Map<String, dynamic> json) => ApiClass(
         products: List<Product>.from(
             json["products"].map((x) => Product.fromJson(x))),
         total: json["total"],

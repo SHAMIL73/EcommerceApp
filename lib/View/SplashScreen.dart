@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Const/Color.dart';
 import 'dart:async';
 import 'package:flutter_application_2/View/auth/Signup.dart';
 
@@ -24,39 +23,39 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.trolley,
-              color: blackcolor,
+              color: Colors.black,
               size: 150,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             // Game title
             Text(
               'Eapp',
               style: TextStyle(
-                color: blackcolor,
+                color: Colors.black,
                 fontSize: 29.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
             // Loading text and animation
             Column(mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(blackcolor),
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                 ),
              
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               'Loading...',
               style: TextStyle(
-                color: blackcolor,
+                color: Colors.black,
                 fontSize: 16.0,
               ),
             ),

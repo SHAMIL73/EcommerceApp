@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Model/ApiController.dart';
+import 'package:flutter_application_2/Model/ApiClass.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiProvider extends ChangeNotifier {
-  late ApiController fetchData =
-      ApiController(products: [], total: 0, skip: 0, limit: 0);
+  late ApiClass fetchData =
+      ApiClass(products: [], total: 0, skip: 0, limit: 0);
 
   Future<void> fetchDataFromApi() async {
     try {
@@ -17,7 +17,7 @@ class ApiProvider extends ChangeNotifier {
         final Map<String, dynamic> data = json.decode(response.body);
         // print("Response Data: $data");
 
-        fetchData = ApiController.fromJson(data);
+        fetchData = ApiClass.fromJson(data);
 // print("fetchData: $fetchData");
         notifyListeners();
       } else {
@@ -29,5 +29,13 @@ class ApiProvider extends ChangeNotifier {
       // Handle exceptions
       print("Error: $e");
     }
+  }
+   List<Product> myList = [];
+   
+  searching(String keyWord) {
+    myList = fetchData.products
+        .where((item) => item.title.toLowerCase().startsWith(keyWord))
+        .toList();
+    notifyListeners();
   }
 }
